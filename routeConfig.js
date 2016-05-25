@@ -24,6 +24,7 @@ var ajax = function(route, jsonStr){
         res.setHeader("Access-Control-Allow-Origin",true);
         res.setHeader("Content-Type", "application/json;charset=utf-8");
         if(route){
+            delete require.cache[require.resolve(route)];
             res.end(JSON.stringify(require(route)));
         } else {
             res.end(JSON.stringify(jsonStr));
@@ -39,14 +40,15 @@ var jsonP = function(route, jsonStr){
     return function(req, res){        
         res.setHeader("Access-Control-Allow-Origin",true);
         res.setHeader("Content-Type", "application/json;charset=utf-8");
+        delete require.cache[require.resolve(route)];
         res.end("handler(" + JSON.stringify(require(route)) + ")");
     }
 }
-var render_html = function(str_html){
+var render_html = function(filePath){
     console.log("render_html执行...");
     return function(req, res){
         res.setHeader("Content-Type", "text/html");
-        res.end(str_html);
+        res.end(readFile(filePath));
     }
 }
 /**
@@ -70,10 +72,11 @@ var readFile = function(filePath){
 **/
 var mocks = {
     '/getJson.do': ajax('./mock/data/json/test.json'),
-    '/getHTML.do': render_html(readFile('./mock/data/renderHTML/test.html')),
+    '/getHTML.do': render_html('./mock/data/renderHTML/test.html'),
     '/redirectToHTML.do': redirect('./mock/data/distHTML/test.html'),
     '/getJsonP.do': jsonP('./mock/data/json/jsonP.json')
 }
+
 var middleware = function(){
     //任何一个请求(css,js,img,ajax)都会经过这里
     return function (req, res, next){
@@ -93,6 +96,7 @@ var middleware = function(){
             }
         }
         if (mocks[url]) {
+            // ajax('./mock/data/json/test.json')(req, res, parameter);
             mocks[url](req, res, parameter);
         }
         next();

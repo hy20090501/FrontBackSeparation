@@ -82,7 +82,9 @@ gulp.task('server', ['less-to-css', 'vm-to-html'], function() {
     //gulp.watch("src/tpl/**/*.vm").on('change', reload);
     gulp.watch([
         './src/tpl/**/*.vm',
-        './mock/less/*.less'
+        './mock/less/*.less',
+        './mock/data/json/*.json',
+        './mock/data/renderHTML/*.html'
     ], ['browserSync-watch']);
 });
 
