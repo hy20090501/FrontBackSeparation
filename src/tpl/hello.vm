@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>前端工程化</title>
+	<link rel="stylesheet" href="../../static-web/css/test1.css" />
+	<script src="../../static-web/js/jquery-1.9.1.min.js" type="text/javascript"></script>
+</head>
+<body>
+	<hr>
+	velocity参数：
+	<div class="title">
+		$!{title}
+	</div>
+	<hr>
+	图片：
+	<div>
+		<img src="../../static-web/images/front.png" alt="">
+	</div>
+	<hr>
+	背景图片：
+	<div class="bg">
+	</div>
+	<hr>
+	<div id="jsonContainer">
+	</div>
+	<hr>
+	<div id="htmlContainer">
+	</div>
+	<hr>
+	<div id="renderHTMLContainer">
+		<a href="/redirectToHTML.do">跳转重定向</a>
+	</div>
+	<script>
+		$(function(){
+			$.post('/getJson.do', {id: "value"}, function (data) {
+				$("#jsonContainer").html("本请求响应的json格式数据：" + JSON.stringify(data));
+			});
+			$.post('/getHTML.do', {id: "value"}, function (data) {
+				$("#htmlContainer").html("本请求响应的html字符串数据：" + data);
+			});
+		});
+	</script>
+</body>
+</html>
