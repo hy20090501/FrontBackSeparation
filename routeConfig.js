@@ -15,7 +15,7 @@ var redirect = function(route){
 };
 /**
  *  @param route: ./mock/data/json/test.json
- *
+ *  @param jsonStr: {isSuccess:1}
 **/
 var ajax = function(route, obj_json){
     return function(req, res){        
