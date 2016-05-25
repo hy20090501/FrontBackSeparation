@@ -1,5 +1,5 @@
 # FrontBackSeparation
-
+this demo is a example of front end engineering. it uses related tools such as gulp, browser-sync.
 ## Starting the project on your local machine
 
 Please check if the project is still working after you add your contribution to it. You can run the project in three easy steps:
