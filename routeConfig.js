@@ -37,11 +37,11 @@ var ajax = function(route, jsonStr){
 **/
 var jsonP = function(route, jsonStr){
     console.log("jsonP执行...");
-    return function(req, res){        
+    return function(req, res, param, jsonpCallback){        
         res.setHeader("Access-Control-Allow-Origin",true);
         res.setHeader("Content-Type", "application/json;charset=utf-8");
         delete require.cache[require.resolve(route)];
-        res.end("handler(" + JSON.stringify(require(route)) + ")");
+        res.end(jsonpCallback + "(" + JSON.stringify(require(route)) + ")");
     }
 }
 var render_html = function(filePath){
@@ -83,21 +83,24 @@ var middleware = function(){
         var url = req.url;
         //如果是ajax请求，如/getJson.do?type=1，截取查询参数：type=1
         var parameter = "";
+        //jsonP回调函数
+        var jsonpCallback = null;
         //如果请求中包含参数
         if(url.indexOf('?') > 0) {
             if(url.indexOf("callback") === -1) {
-                //非jsonp请求.请求格式为："/getJsonP.do?callback=handler&jsonpCallback=handler&_=1464161171204"，因此包含callback字符串
+                //非jsonp请求.请求格式为："/getJsonP.do?callback=handler321&jsonpCallback=handler321&_=1464251185988"，因此包含callback字符串
                 var index =  url.indexOf('?');
                 parameter = index > 0 ? url.slice(index) : "";
                 url = url.slice(0, url.indexOf('?'));
             } else {
                 //jsonp请求.请求格式为："/getJsonP.do?callback=handler&jsonpCallback=handler&_=1464161171204"，因此包含callback字符串
+                jsonpCallback = url.slice(url.indexOf("jsonpCallback")+14,url.indexOf("&_="));
                 url = url.slice(0, url.indexOf('?'));
             }
         }
         if (mocks[url]) {
             // ajax('./mock/data/json/test.json')(req, res, parameter);
-            mocks[url](req, res, parameter);
+            mocks[url](req, res, parameter, jsonpCallback);
         }
         next();
     }

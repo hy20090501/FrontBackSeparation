@@ -44,7 +44,7 @@
 			});
 			getJsonP('/getJsonP.do', null, function(data) {
 	            if (data.success) {
-	                $("#jsonPContainer").html("本jsonP请求响应的html字符串数据：" + JSON.stringify(data));
+	                $("#jsonPContainer").html("本jsonP请求响应的json数据：" + JSON.stringify(data));
 	            }
 	        });
 		});
