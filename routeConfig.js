@@ -40,8 +40,12 @@ var jsonP = function(route, jsonStr){
     return function(req, res, param, jsonpCallback){        
         res.setHeader("Access-Control-Allow-Origin",true);
         res.setHeader("Content-Type", "application/json;charset=utf-8");
-        delete require.cache[require.resolve(route)];
-        res.end(jsonpCallback + "(" + JSON.stringify(require(route)) + ")");
+        if(route){
+            delete require.cache[require.resolve(route)];
+            res.end(jsonpCallback + "(" + JSON.stringify(require(route)) + ")");
+        } else {
+            res.end(jsonpCallback + "(" + JSON.stringify(jsonStr) + ")");
+        }
     }
 }
 var render_html = function(filePath){
@@ -71,10 +75,12 @@ var readFile = function(filePath){
  *
 **/
 var mocks = {
-    '/getJson.do': ajax('./mock/data/json/test.json'),
+    //'/getJson.do': ajax('./mock/data/json/test.json'),
+    '/getJson.do': ajax(null, {"success" : true}),
     '/getHTML.do': render_html('./mock/data/renderHTML/test.html'),
     '/redirectToHTML.do': redirect('./mock/data/distHTML/test.html'),
-    '/getJsonP.do': jsonP('./mock/data/json/jsonP.json')
+    // '/getJsonP.do': jsonP('./mock/data/json/jsonP.json')
+    '/getJsonP.do': jsonP(null, {"success" : false})
 }
 
 var middleware = function(){
